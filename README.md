@@ -1,2 +1,2 @@
 # JobCluster
-JobCluster is an AI-powered job discovery and resume analysis platform designed to help candidates optimize their resumes, discover relevant job opportunities, and get hired faster through intelligent matching and automation.
+JobCluster is a modern job discovery platform that helps users search, filter, and save relevant job opportunities with an intuitive UI, powerful filters, and resume-based insights.
