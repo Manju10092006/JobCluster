@@ -1,0 +1,132 @@
+# ============================================
+# ENVIRONMENT FILES - NEVER COMMIT THESE!
+# ============================================
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+# Allow .env.example files (they contain safe placeholders only)
+!.env.example
+
+# ============================================
+# NODE.JS DEPENDENCIES
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.backup
+.npm
+
+# ============================================
+# PYTHON CACHE & VIRTUAL ENVIRONMENTS
+# ============================================
+__pycache__/
+*.pyc
+*.py[cod]
+*$py.class
+.Python
+*.so
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ============================================
+# UPLOADS & USER DATA (SENSITIVE)
+# ============================================
+uploads/
+uploads/**
+server/uploads/
+server/uploads/**
+resume-server/uploads/
+resume-server/uploads/**
+**/uploads/**
+
+# ============================================
+# DATABASE FILES
+# ============================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ============================================
+# LOGS
+# ============================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ============================================
+# BUILD OUTPUTS & COVERAGE
+# ============================================
+dist/
+build/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# ============================================
+# DOCKER OVERRIDES
+# ============================================
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# ============================================
+# IDE & EDITOR FILES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# OS FILES
+# ============================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ============================================
+# TEMPORARY FILES
+# ============================================
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+
+# ============================================
+# SECURITY & SECRETS
+# ============================================
+*.pem
+*.key
+*.cert
+*.p12
+secrets/
+.secrets
