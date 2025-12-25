@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 
 // CORS configuration - Allow frontend origins
 const corsOptions = {
-    origin: [
+    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL : [
         'http://localhost:5500',
         'http://127.0.0.1:5500',
         'http://localhost:3000',
@@ -81,7 +81,7 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8000/auth/google/callback"
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || `${process.env.AUTH_BASE_URL || 'http://localhost:8000'}/auth/google/callback`
 }, (accessToken, refreshToken, profile, done) => {
     // Store user info
     const user = {
@@ -103,10 +103,13 @@ passport.use(new GoogleStrategy({
 // Start Google OAuth flow
 app.get('/auth/google', (req, res, next) => {
     // Store the referer (originating page) in session to redirect back correctly
-    const referer = req.get('Referer');
-    if (referer) {
-        req.session.oauthReturnUrl = referer;
-        console.log(`📌 Stored OAuth Return URL: ${referer}`);
+    // Only use referer if CLIENT_URL is not set (for local development)
+    if (!process.env.CLIENT_URL) {
+        const referer = req.get('Referer');
+        if (referer) {
+            req.session.oauthReturnUrl = referer;
+            console.log(`📌 Stored OAuth Return URL: ${referer}`);
+        }
     }
 
     // Also support returnTo query param fallback
@@ -129,25 +132,27 @@ app.get('/auth/google/callback',
             // Generate JWT token
             const token = generateToken(req.user);
 
-            // Determine redirect URL
-            let targetOrigin = 'http://localhost:8000'; // Default fallback (now serving static files)
+            // Use CLIENT_URL from environment, fallback to detected origin
+            let clientUrl = process.env.CLIENT_URL;
 
-            // Try to use the stored referer origin
-            if (req.session.oauthReturnUrl) {
+            // Try to use the stored referer origin if CLIENT_URL not set
+            if (!clientUrl && req.session.oauthReturnUrl) {
                 try {
                     const returnUrl = new URL(req.session.oauthReturnUrl);
-                    targetOrigin = returnUrl.origin;
-                    console.log(`🎯 using detected origin: ${targetOrigin}`);
+                    clientUrl = returnUrl.origin;
+                    console.log(`🎯 using detected origin: ${clientUrl}`);
                 } catch (e) {
                     console.error('Error parsing return URL:', e);
                 }
             }
 
-            // Construct the final path
-            // Redirect to the dashboard page with profile section
-            const redirectPath = '/client/src/pages/dashboard/index.html';
+            // Fallback to localhost for local development
+            if (!clientUrl) {
+                clientUrl = 'http://localhost:3000';
+            }
 
-            const finalRedirectUrl = `${targetOrigin}${redirectPath}?token=${token}#view-profile`;
+            // Redirect to dashboard with token
+            const finalRedirectUrl = `${clientUrl}/dashboard?token=${token}`;
 
             // Clear session data
             delete req.session.returnTo;
@@ -159,7 +164,8 @@ app.get('/auth/google/callback',
             res.redirect(finalRedirectUrl);
         } catch (error) {
             console.error('Token generation error:', error);
-            res.redirect('http://localhost:3000?auth=error');
+            const errorRedirect = process.env.CLIENT_URL || 'http://localhost:3000';
+            res.redirect(`${errorRedirect}?auth=error`);
         }
     }
 );
@@ -191,7 +197,8 @@ app.get('/auth/logout', (req, res) => {
 
 // Failure page
 app.get('/auth/google/failure', (req, res) => {
-    res.redirect('http://localhost:3000?auth=error');
+    const errorRedirect = process.env.CLIENT_URL || 'http://localhost:3000';
+    res.redirect(`${errorRedirect}?auth=error`);
 });
 
 // Health check
