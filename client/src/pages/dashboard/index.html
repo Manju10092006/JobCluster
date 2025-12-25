@@ -4393,7 +4393,7 @@
                     button.textContent = 'Saving...';
                     button.disabled = true;
 
-                    fetch('http://localhost:5000/api/profile', {
+                    fetch('https://jobcluster-1.onrender.com/api/profile', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -4523,7 +4523,7 @@
                     const token = localStorage.getItem('jc_token') || localStorage.getItem('token') || localStorage.getItem('jwt');
                     if (!token) return;
 
-                    const response = await fetch('http://localhost:5000/api/profile', {
+                    const response = await fetch('https://jobcluster-1.onrender.com/api/profile', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -5603,7 +5603,7 @@
                         headers['Authorization'] = `Bearer ${token}`;
                     }
 
-                    const response = await fetch("http://localhost:5000/api/resume/ats", {
+                    const response = await fetch("https://jobcluster-6.onrender.com/api/resume/ats", {
                         method: "POST",
                         headers: headers,
                         body: formData,

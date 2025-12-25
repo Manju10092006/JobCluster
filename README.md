@@ -266,6 +266,3 @@ JobCluster/
 Made with ❤️ for job seekers worldwide
 
 </div>
-
-
-

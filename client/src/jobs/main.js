@@ -1177,7 +1177,7 @@ function updateResultsCount() {
 // Search jobs function (actual API call logic)
 async function searchJobs(query = "", location = "India") {
     try {
-        const res = await fetch("http://localhost:5000/api/jobs/search", {
+        const res = await fetch("https://jobcluster-1.onrender.com/api/jobs/search", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

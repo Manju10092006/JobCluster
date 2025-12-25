@@ -3,7 +3,7 @@
  * Handles saving jobs to Redis via backend API
  */
 
-const API_BASE_URL = 'http://localhost:5000'; // Backend server
+const API_BASE_URL = 'https://jobcluster-1.onrender.com'; // Backend server
 
 // Get JWT token from localStorage
 function getToken() {

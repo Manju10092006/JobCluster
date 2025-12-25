@@ -4,7 +4,7 @@
  */
 
 // API Base URL - same as other dashboard APIs
-const RESUME_HISTORY_API_BASE = 'http://localhost:5000/api/resume';
+const RESUME_HISTORY_API_BASE = 'https://jobcluster-6.onrender.com/api/resume';
 
 /**
  * Get JWT token from localStorage

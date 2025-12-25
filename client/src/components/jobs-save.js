@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  const API_BASE_URL = 'http://localhost:5000/api';
+  const API_BASE_URL = 'https://jobcluster-1.onrender.com/api';
 
   /**
    * Get JWT token from localStorage
