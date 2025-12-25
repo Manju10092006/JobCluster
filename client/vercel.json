@@ -1,7 +1,16 @@
 {
+    "builds": [
+      {
+        "src": "src/pages/**/*.html",
+        "use": "@vercel/static"
+      }
+    ],
     "routes": [
-      { "src": "/", "dest": "/index.html" },
-      { "src": "/(.*)", "dest": "/index.html" }
+      { "src": "/", "dest": "/src/pages/index.html" },
+      { "src": "/signin", "dest": "/src/pages/signin.html" },
+      { "src": "/signup", "dest": "/src/pages/signup.html" },
+      { "src": "/dashboard", "dest": "/src/pages/dashboard/index.html" },
+      { "src": "/(.*)", "dest": "/src/pages/index.html" }
     ]
   }
   
