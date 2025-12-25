@@ -35,7 +35,7 @@
    */
   function showLoginPrompt() {
     if (confirm('Please login to save jobs. Would you like to login with Google now?')) {
-      window.location.href = 'http://localhost:8000/auth/google';
+      window.location.href = 'https://jobcluster-2.onrender.com/auth/google';
     }
   }
 
