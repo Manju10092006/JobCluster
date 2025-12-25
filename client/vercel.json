@@ -1,16 +1,12 @@
 {
-    "builds": [
-      {
-        "src": "src/pages/**/*.html",
-        "use": "@vercel/static"
-      }
-    ],
-    "routes": [
-      { "src": "/", "dest": "/src/pages/index.html" },
-      { "src": "/signin", "dest": "/src/pages/signin.html" },
-      { "src": "/signup", "dest": "/src/pages/signup.html" },
-      { "src": "/dashboard", "dest": "/src/pages/dashboard/index.html" },
-      { "src": "/(.*)", "dest": "/src/pages/index.html" }
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      { "source": "/", "destination": "/src/pages/index.html" },
+      { "source": "/dashboard", "destination": "/src/pages/dashboard/index.html" },
+      { "source": "/signin", "destination": "/src/pages/signin.html" },
+      { "source": "/signup", "destination": "/src/pages/signup.html" },
+      { "source": "/(.*)", "destination": "/src/pages/index.html" }
     ]
   }
   
