@@ -5,21 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - Job Cluster</title>
-    <link rel="stylesheet" href="../../src/styles/signup-form.css">
+    <link rel="stylesheet" href="/src/styles/signup-form.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <!-- Logo -->
     <div class="logo" style="position: fixed; top: 20px; left: 20px; z-index: 1000; pointer-events: auto;">
-        <a href="index.html" class="logo-link"
+        <a href="/src/pages/index.html" class="logo-link"
             style="display: inline-flex; align-items: center; text-decoration: none; transition: transform 0.2s; background: transparent; cursor: pointer;">
-            <img src="../../public/images/logo.png" alt="Job Cluster" class="logo-text"
+            <img src="/public/images/logo.png" alt="Job Cluster" class="logo-text"
                 style="height: auto; max-height: 80px; width: auto; display: block; mix-blend-mode: darken; filter: brightness(1.05) contrast(1.15) saturate(1.1); pointer-events: none;">
         </a>
     </div>
     <video autoplay muted loop playsinline id="bg-video">
-        <source src="../../public/videos/WhatsApp Video 2025-11-23 at 15.03.01_e7e234fd.mp4" type="video/mp4">
+        <source src="/public/videos/WhatsApp Video 2025-11-23 at 15.03.01_e7e234fd.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
     <div class="signup-container">
@@ -94,14 +94,14 @@
                 <button type="submit" class="submit-btn">Sign Up</button>
 
                 <div class="login-redirect">
-                    <p>Already have an account? <a href="signin.html">Sign in</a></p>
+                    <p>Already have an account? <a href="/src/pages/signin.html">Sign in</a></p>
                 </div>
             </form>
         </div>
     </div>
-    <script src="../../src/components/signup-form.js"></script>
+    <script src="/src/components/signup-form.js"></script>
     <!-- Auth Integration -->
-    <script src="../../src/components/auth-ui.js"></script>
+    <script src="/src/components/auth-ui.js"></script>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
         // Override form submission to use auth.js

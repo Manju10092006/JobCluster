@@ -3,15 +3,7 @@
   "outputDirectory": ".",
   "rewrites": [
     {
-      "source": "/public/(.*)",
-      "destination": "/public/$1"
-    },
-    {
-      "source": "/src/(.*\\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|mp4|webp|avif|html))",
-      "destination": "/src/$1"
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!assets|images|videos|fonts|.*\\..*).*)",
       "destination": "/src/pages/index.html"
     }
   ]
