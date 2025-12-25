@@ -105,10 +105,10 @@ app.get('/auth/google', (req, res, next) => {
     // Store the referer (originating page) in session to redirect back correctly
     // Only use referer if CLIENT_URL is not set (for local development)
     if (!process.env.CLIENT_URL) {
-        const referer = req.get('Referer');
-        if (referer) {
-            req.session.oauthReturnUrl = referer;
-            console.log(`📌 Stored OAuth Return URL: ${referer}`);
+    const referer = req.get('Referer');
+    if (referer) {
+        req.session.oauthReturnUrl = referer;
+        console.log(`📌 Stored OAuth Return URL: ${referer}`);
         }
     }
 
@@ -125,49 +125,32 @@ app.get('/auth/google', (req, res, next) => {
 
 // Google OAuth callback
 app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/auth/google/failure' }),
-    (req, res) => {
-        // Successful authentication
-        try {
-            // Generate JWT token
-            const token = generateToken(req.user);
+  passport.authenticate('google', { failureRedirect: '/auth/google/failure' }),
+  async (req, res) => {
+    try {
+      if (!req.user) {
+        console.error('❌ No user from Google');
+        return res.status(500).json({ success: false, error: 'No user data' });
+      }
 
-            // Use CLIENT_URL from environment, fallback to detected origin
-            let clientUrl = process.env.CLIENT_URL;
+      const token = generateToken(req.user);
 
-            // Try to use the stored referer origin if CLIENT_URL not set
-            if (!clientUrl && req.session.oauthReturnUrl) {
-                try {
-                    const returnUrl = new URL(req.session.oauthReturnUrl);
-                    clientUrl = returnUrl.origin;
-                    console.log(`🎯 using detected origin: ${clientUrl}`);
-                } catch (e) {
-                    console.error('Error parsing return URL:', e);
-                }
-            }
+      const clientUrl = process.env.CLIENT_URL;
+      if (!clientUrl) {
+        console.error('❌ CLIENT_URL missing in env');
+        return res.status(500).json({ success: false, error: 'CLIENT_URL not set' });
+      }
 
-            // Fallback to localhost for local development
-            if (!clientUrl) {
-                clientUrl = 'http://localhost:3000';
-            }
+      const finalRedirectUrl = `${clientUrl}/dashboard?token=${token}`;
+      console.log(`🔄 Redirecting to ${finalRedirectUrl}`);
 
-            // Redirect to dashboard with token
-            const finalRedirectUrl = `${clientUrl}/dashboard?token=${token}`;
+      res.redirect(finalRedirectUrl);
 
-            // Clear session data
-            delete req.session.returnTo;
-            delete req.session.oauthReturnUrl;
-
-            console.log(`✅ Google Login Success for ${req.user.email}`);
-            console.log(`🔄 Redirecting to ${finalRedirectUrl}`);
-
-            res.redirect(finalRedirectUrl);
-        } catch (error) {
-            console.error('Token generation error:', error);
-            const errorRedirect = process.env.CLIENT_URL || 'http://localhost:3000';
-            res.redirect(`${errorRedirect}?auth=error`);
-        }
+    } catch (err) {
+      console.error('❌ OAuth callback error:', err);
+      res.status(500).json({ success: false, error: 'Internal server error' });
     }
+  }
 );
 
 // Get current user (Protected)
