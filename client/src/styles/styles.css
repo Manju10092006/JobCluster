@@ -1835,6 +1835,15 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
+
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+
+    .container {
+        padding: 0 20px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -1865,6 +1874,27 @@ body {
     .platform-works-section .feature-card {
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .nav {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px;
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
     }
 }
 
