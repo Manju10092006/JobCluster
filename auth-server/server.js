@@ -14,17 +14,29 @@ const { generateToken } = require('./utils/tokens');
 const app = express();
 const PORT = process.env.PORT;
 
-// CORS configuration - Strict origin check (strip trailing slashes)
+// Validate CLIENT_URL is set
+if (!process.env.CLIENT_URL) {
+    console.error('\n❌ ERROR: CLIENT_URL is not defined!');
+    console.error('Please add CLIENT_URL to your environment variables.');
+    console.error('Example: https://job-cluster.vercel.app\n');
+    process.exit(1);
+}
+
+// CORS configuration - Strict origin check (strip trailing slashes and whitespace)
 const corsOptions = {
     origin: (origin, callback) => {
-        // Strip trailing slash from both CLIENT_URL and origin for comparison
-        const allowed = (process.env.CLIENT_URL || '').replace(/\/$/, '');
-        const requestOrigin = (origin || '').replace(/\/$/, '');
+        // Normalize: strip trailing slash, trim whitespace, lowercase
+        const allowed = (process.env.CLIENT_URL || '').trim().replace(/\/$/, '').toLowerCase();
+        const requestOrigin = (origin || '').trim().replace(/\/$/, '').toLowerCase();
         
+        // Log for debugging
+        console.log('🔍 CORS check - Origin:', origin, '| Allowed:', allowed, '| Match:', requestOrigin === allowed);
+        
+        // Allow if no origin (same-origin requests) or if origins match
         if (!origin || requestOrigin === allowed) {
             callback(null, true);
         } else {
-            console.error('❌ CORS blocked origin:', origin, '| Expected:', allowed);
+            console.error('❌ CORS blocked origin:', origin, '| Expected:', process.env.CLIENT_URL);
             callback(new Error('Not allowed by CORS'));
         }
     },
