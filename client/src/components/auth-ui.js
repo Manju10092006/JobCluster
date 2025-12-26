@@ -342,25 +342,32 @@ const AuthUI = {
 
         // Check if we're returning from OAuth
         if (authStatus === 'success') {
-            // Fetch user from backend
+            // Fetch user from backend using JWT
             try {
-                const response = await fetch(`${API_BASE_URL}/auth/user`, {
+                const token = localStorage.getItem('jc_token');
+                if (!token) {
+                    console.error('No token found after OAuth');
+                    return;
+                }
+                
+                const response = await fetch(`${API_BASE_URL}/auth/me`, {
                     method: 'GET',
-                    credentials: 'include' // Important for session cookies
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
                 });
 
                 if (response.ok) {
-                    const data = await response.json();
-                    if (data.success && data.user) {
-                        this.saveUser(data.user);
-                        // Clean URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        // Redirect to dashboard
-                        const dashboardPath = window.location.pathname.includes('frontend')
-                            ? '../dashboard/index.html'
-                            : 'Dashboard redesign/index.html';
-                        window.location.href = dashboardPath;
-                    }
+                    const user = await response.json();
+                    console.log('Logged in user', user);
+                    this.saveUser(user);
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    // Redirect to dashboard
+                    const dashboardPath = window.location.pathname.includes('frontend')
+                        ? '../dashboard/index.html'
+                        : 'Dashboard redesign/index.html';
+                    window.location.href = dashboardPath;
                 }
             } catch (error) {
                 console.error('Error fetching user after OAuth:', error);
@@ -375,19 +382,23 @@ const AuthUI = {
     // Check auth state on page load
     async checkAuthState() {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/user`, {
+            const token = localStorage.getItem('jc_token');
+            if (!token) return false;
+            
+            const response = await fetch(`${API_BASE_URL}/auth/me`, {
                 method: 'GET',
-                credentials: 'include'
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
 
             if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.user) {
-                    this.saveUser(data.user);
-                    // Refresh all auth UI
-                    this.refreshAllAuthUI();
-                    return true;
-                }
+                const user = await response.json();
+                console.log('Logged in user', user);
+                this.saveUser(user);
+                // Refresh all auth UI
+                this.refreshAllAuthUI();
+                return true;
             }
         } catch (error) {
             console.error('Error checking auth state:', error);
@@ -410,10 +421,13 @@ const AuthUI = {
     // Logout function
     async logout() {
         try {
+            const token = localStorage.getItem('jc_token');
             // Call backend logout endpoint
             await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'GET',
-                credentials: 'include'
+                headers: token ? {
+                    'Authorization': `Bearer ${token}`
+                } : {}
             });
         } catch (error) {
             console.error('Logout error:', error);

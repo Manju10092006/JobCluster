@@ -14,15 +14,18 @@ const { generateToken } = require('./utils/tokens');
 const app = express();
 const PORT = process.env.PORT;
 
-// CORS configuration - Allow frontend origins
+// CORS configuration - Strict origin check
 const corsOptions = {
-    origin: process.env.CLIENT_URL || (() => {
-        console.warn('⚠️  WARNING: CLIENT_URL not set, CORS may be restrictive');
-        return false;
-    })(),
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: (origin, callback) => {
+        const allowed = process.env.CLIENT_URL;
+        if (!origin || origin === allowed) {
+            callback(null, true);
+        } else {
+            console.error('❌ CORS blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
 };
 
 app.use(cors(corsOptions));
