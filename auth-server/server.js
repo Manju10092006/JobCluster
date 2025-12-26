@@ -12,7 +12,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 const { generateToken } = require('./utils/tokens');
 
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT;
 
 // CORS configuration - Allow frontend origins
 const corsOptions = {
@@ -139,16 +139,14 @@ app.get('/auth/google/callback',
 
       const token = generateToken(req.user);
 
-      const clientUrl = process.env.CLIENT_URL;
-      if (!clientUrl) {
-        console.error('❌ CLIENT_URL missing in env');
-        return res.status(500).json({ success: false, error: 'CLIENT_URL not set' });
+      if (!process.env.CLIENT_URL) {
+        throw new Error('CLIENT_URL not set');
       }
 
-      const finalRedirectUrl = `${clientUrl}/dashboard?token=${token}`;
-      console.log(`🔄 Redirecting to ${finalRedirectUrl}`);
+      const redirectUrl = `${process.env.CLIENT_URL.replace(/\/$/, '')}/dashboard?token=${token}`;
+      console.log('🔄 Redirecting to', redirectUrl);
 
-      res.redirect(finalRedirectUrl);
+      res.redirect(redirectUrl);
 
     } catch (err) {
       console.error('❌ OAuth callback error:', err);
