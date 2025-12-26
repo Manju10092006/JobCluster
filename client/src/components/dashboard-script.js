@@ -454,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
             uploadBtn.disabled = true;
 
             try {
-                const res = await fetch('http://localhost:8000/api/resume/upload', {
+                const res = await fetch('https://jobcluster-2.onrender.com/api/resume/upload', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             attempts++;
 
             try {
-                const res = await fetch(`http://localhost:8000/api/resume/result/${resumeId}`, {
+                const res = await fetch(`https://jobcluster-2.onrender.com/api/resume/result/${resumeId}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -1290,7 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const res = await fetch('https://jobcluster-2.onrender.com/auth/me', {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('jc_token') || token}` }
             });
 
             if (res.ok) {

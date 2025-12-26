@@ -3,7 +3,7 @@
  * Handles auth state, UI rendering (button/avatar), and profile management
  */
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://jobcluster-2.onrender.com';
 
 // Auth state management
 const AuthUI = {
