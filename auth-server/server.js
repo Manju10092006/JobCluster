@@ -14,14 +14,17 @@ const { generateToken } = require('./utils/tokens');
 const app = express();
 const PORT = process.env.PORT;
 
-// CORS configuration - Strict origin check
+// CORS configuration - Strict origin check (strip trailing slashes)
 const corsOptions = {
     origin: (origin, callback) => {
-        const allowed = process.env.CLIENT_URL;
-        if (!origin || origin === allowed) {
+        // Strip trailing slash from both CLIENT_URL and origin for comparison
+        const allowed = (process.env.CLIENT_URL || '').replace(/\/$/, '');
+        const requestOrigin = (origin || '').replace(/\/$/, '');
+        
+        if (!origin || requestOrigin === allowed) {
             callback(null, true);
         } else {
-            console.error('❌ CORS blocked origin:', origin);
+            console.error('❌ CORS blocked origin:', origin, '| Expected:', allowed);
             callback(new Error('Not allowed by CORS'));
         }
     },
