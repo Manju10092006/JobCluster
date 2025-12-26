@@ -16,13 +16,10 @@ const PORT = process.env.PORT || 8000;
 
 // CORS configuration - Allow frontend origins
 const corsOptions = {
-    origin: process.env.CLIENT_URL ? process.env.CLIENT_URL : [
-        'http://localhost:5500',
-        'http://127.0.0.1:5500',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://localhost:8000'
-    ],
+    origin: process.env.CLIENT_URL || (() => {
+        console.warn('⚠️  WARNING: CLIENT_URL not set, CORS may be restrictive');
+        return false;
+    })(),
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
@@ -78,10 +75,17 @@ if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
 }
 
 // Google OAuth Strategy
+if (!process.env.GOOGLE_CALLBACK_URL) {
+    console.error('\n❌ ERROR: GOOGLE_CALLBACK_URL is not defined!');
+    console.error('Please add GOOGLE_CALLBACK_URL to your .env file in auth-server/');
+    console.error('Example: https://jobcluster-2.onrender.com/auth/google/callback\n');
+    process.exit(1);
+}
+
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL || `${process.env.AUTH_BASE_URL || 'http://localhost:8000'}/auth/google/callback`
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
 }, (accessToken, refreshToken, profile, done) => {
     // Store user info
     const user = {
@@ -156,15 +160,24 @@ app.get('/auth/google/callback',
 // Get current user (Protected)
 app.get('/auth/me', (req, res) => {
     const authHeader = req.headers.authorization;
-    if (authHeader) {
-        const token = authHeader.split(' ')[1];
-        const { verifyToken } = require('./utils/tokens');
-        const user = verifyToken(token);
-
-        if (user) {
-            return res.json(user);
-        }
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
     }
+    
+    const token = authHeader.split(' ')[1];
+    
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Unauthorized' });
+    }
+    
+    const { verifyToken } = require('./utils/tokens');
+    const user = verifyToken(token);
+
+    if (user) {
+        return res.json(user);
+    }
+    
     res.status(401).json({ success: false, message: 'Unauthorized' });
 });
 
@@ -180,8 +193,11 @@ app.get('/auth/logout', (req, res) => {
 
 // Failure page
 app.get('/auth/google/failure', (req, res) => {
-    const errorRedirect = process.env.CLIENT_URL || 'http://localhost:3000';
-    res.redirect(`${errorRedirect}?auth=error`);
+    if (!process.env.CLIENT_URL) {
+        console.error('❌ CLIENT_URL missing for failure redirect');
+        return res.status(500).json({ success: false, error: 'CLIENT_URL not set' });
+    }
+    res.redirect(`${process.env.CLIENT_URL}?auth=error`);
 });
 
 // Health check
@@ -196,9 +212,14 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log('\n✅ Auth server running on http://localhost:' + PORT);
+    console.log('\n✅ Auth server running on port ' + PORT);
     console.log('✅ Google OAuth configured');
+    if (process.env.GOOGLE_CALLBACK_URL) {
+        console.log('✅ Callback URL: ' + process.env.GOOGLE_CALLBACK_URL);
+    }
+    if (process.env.CLIENT_URL) {
+        console.log('✅ Client URL: ' + process.env.CLIENT_URL);
+    }
     console.log('✅ Ready to accept authentication requests\n');
-    console.log('Frontend should connect to: http://localhost:' + PORT + '/auth/google\n');
 });
 

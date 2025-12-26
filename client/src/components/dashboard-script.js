@@ -1222,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (token) {
                 try {
-                    await fetch('http://localhost:8000/auth/logout', {
+                    await fetch('https://jobcluster-2.onrender.com/auth/logout', {
                         method: 'POST',
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -1289,7 +1289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Google picture from JWT:', googlePicture);
 
         try {
-            const res = await fetch('http://localhost:8000/auth/me', {
+            const res = await fetch('https://jobcluster-2.onrender.com/auth/me', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
 
@@ -1456,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             try {
-                const res = await fetch('http://localhost:8000/auth/update_profile', {
+                const res = await fetch('https://jobcluster-2.onrender.com/auth/update_profile', {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${token}`,

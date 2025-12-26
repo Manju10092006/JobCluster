@@ -29,9 +29,14 @@
         localStorage.setItem('token', jwtFromURL);
 
         // Remove token from URL for clean UI
-        const url = new URL(window.location.href);
-        url.searchParams.delete('token');
-        window.history.replaceState({}, document.title, url.toString());
+        // If on dashboard page, clean to just "/dashboard"
+        if (window.location.pathname.includes('/dashboard')) {
+            window.history.replaceState({}, document.title, "/dashboard");
+        } else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('token');
+            window.history.replaceState({}, document.title, url.toString());
+        }
 
         console.log('✅ Token saved to localStorage (jc_token)');
     }
