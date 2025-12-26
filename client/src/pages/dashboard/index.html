@@ -111,6 +111,45 @@
             visibility: visible !important;
         }
 
+        /* Ensure Footer is always visible */
+        footer {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+            position: relative !important;
+            z-index: 10 !important;
+        }
+
+        footer * {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        #footer-cta,
+        #footer-grid,
+        .footer-col {
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
+        }
+
+        #footer-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+        }
+
+        @media (max-width: 1024px) {
+            #footer-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #footer-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
         /* Logo Styles - Matching Home Page */
         .logo-link {
             display: inline-flex;
@@ -3435,9 +3474,9 @@
             </h1>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 relative z-10 h-full flex flex-col justify-between">
+        <div class="max-w-7xl mx-auto px-6 relative z-10 py-16">
             <!-- CTA Section -->
-            <div class="text-center mb-32" id="footer-cta">
+            <div class="text-center mb-24" id="footer-cta">
                 <h2 class="text-4xl md:text-5xl font-display font-bold text-slate-900 mb-6 tracking-tight">
                     Ready to find your<br>dream job faster?
                 </h2>
@@ -3449,9 +3488,9 @@
             </div>
 
             <!-- 4 Columns Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-4 w-full mb-12" id="footer-grid">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8 w-full mb-12" id="footer-grid">
 
-                <!-- Column 1: Info -->
+                <!-- Column 1: Info & Address -->
                 <div class="footer-col">
                     <h4 class="flex items-center gap-2 font-bold text-slate-900 mb-6 text-base">
                         <span class="w-2 h-2 rounded-full bg-purple-600 shadow-[0_0_8px_rgba(147,51,234,0.6)]"></span>
@@ -3560,14 +3599,11 @@
 
             <!-- Credits Line -->
             <div class="text-center relative z-10 mb-6">
-                <p class="text-slate-600 text-sm font-medium mb-2">
+                <p class="text-slate-600 text-sm font-medium">
                     Built with ❤️ by 
                     <a href="https://github.com/Manju10092006" target="_blank" class="text-purple-600 hover:text-purple-800 font-bold transition-colors">Manjunath</a> 
                     & 
                     <a href="https://github.com/Snehith-0607" target="_blank" class="text-purple-600 hover:text-purple-800 font-bold transition-colors">Snehith</a>
-                </p>
-                <p class="text-slate-500 text-xs opacity-70 mb-4">
-                    ⭐ Star this repo if it helps you land your dream job!
                 </p>
             </div>
 
